@@ -12,9 +12,17 @@ build/
 venv/
 env/
 ENV/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # Streamlit
 .streamlit/
+*.streamlit/
 
 # IDE
 .vscode/
@@ -22,16 +30,31 @@ ENV/
 *.swp
 *.swo
 *~
+.spyderproject
+.spyproject
+.ropeproject
 
 # OS
 .DS_Store
 Thumbs.db
+*.log
 
 # Environment variables
 .env
 .env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 
 # Project specific
 to_do.md
 nohup.out
-githubsetup.md
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
