@@ -1,0 +1,32 @@
+This is the brief:
+Build a real-time anomaly detection app in Python.
+Requirements:
+1. Data Generation
+
+Generate a random time-series data stream (e.g., stock quotes, sensor
+readings, etc.).
+
+Data should arrive continuously (simulate a live feed).
+
+2. Visualization
+Display the incoming data on a chart in real time.
+
+3. Anomaly Detection
+Implement an algorithm that detects anomalies (you decide the
+definition).
+Mark anomalies clearly on the visualisation.
+
+4. Web Interface
+The app must have a publicly accessible web interface (e.g., via Flask, FastAPI, Streamlit, Dash, or similar).
+Users should be able to view the real-time chart in their browser.
+
+Expectations
+1. You can use any Python libraries you feel comfortable with (Plotly, Bokeh, Matplotlib, Scikit-learn, Pandas, Numpy, etc.).
+2. Focus on building a working product with a good user experience.
+3. Clean, readable code is a plus, but speed of prototyping is more important.
+4. Bonus points if you add nice touches (e.g., controls, styling, multiple anomaly detection methods).
+
+Deliverables
+1. A link to the publicly accessible web app (e.g., deployed via Streamlit Cloud, Heroku, or similar).
+2. A short README describing how your app works, libraries used, and how to run it locally.
+3. Source code (GitHub or other repository).
