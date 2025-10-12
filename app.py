@@ -761,6 +761,71 @@ def main():
     st.title("📊 Real-Time Anomaly Detection")
     st.markdown("**Detect anomalies in streaming time-series data using multiple statistical methods**")
     
+    # Educational content (collapsed by default to not interfere with streaming)
+    with st.expander("📊 Understanding the Visualization & Performance Metrics", expanded=False):
+        st.markdown("""
+        ### Chart Legend
+        
+        The chart uses different markers to show detection performance in real-time:
+        
+        - **✅ Green Stars**: **True Positives (TP)** - Correct detections! The algorithm successfully identified an actual anomaly.
+        - **❌ Red X**: **False Positives (FP)** - Algorithm detected an anomaly where there wasn't one (false alarm).
+        - **⚠️ Yellow Diamonds**: **False Negatives (FN)** - Missed anomalies! The algorithm failed to detect an actual anomaly.
+        - **🔵 Blue Line**: Normal data stream with natural patterns and noise.
+        - **🟠 Orange Circles (transparent)**: Ground truth - actual injected anomalies for reference.
+        
+        ### Performance Metrics Explained
+        
+        **Confusion Matrix Elements**:
+        - **True Positives (TP)**: Correctly detected anomalies ✅
+        - **False Positives (FP)**: Incorrect detections (false alarms) ❌
+        - **False Negatives (FN)**: Missed anomalies ⚠️
+        - **True Negatives (TN)**: Correctly identified normal points
+        
+        **Key Metrics**:
+        - **Precision**: TP / (TP + FP) - How many detected anomalies were actually anomalies?
+        - **Recall (Sensitivity)**: TP / (TP + FN) - What percentage of actual anomalies did we catch?
+        - **F1-Score**: Harmonic mean of precision and recall - Overall detection quality.
+        - **Accuracy**: (TP + TN) / Total - Overall correctness of the algorithm.
+        
+        ### How It Works
+        
+        **Data Generation**: The app generates truly random time-series data using:
+        - **Random Walk Process**: Each value = previous value + random change (like real stock prices!)
+        - **Volatility**: Controls the magnitude of random fluctuations
+        - **Drift**: Optional upward or downward bias
+        - **True Randomness**: Completely unpredictable, no predetermined patterns
+        - **Injected Anomalies**: Random spikes at configurable probability for testing
+        
+        **Anomaly Detection Methods** (All Academically Validated):
+        
+        1. **MAD (Modified Z-Score)** 🏆 **Most Robust**: Uses median and Median Absolute Deviation instead of mean/std. Extremely robust to outliers and recommended for most use cases. Based on Iglewicz & Hoaglin (1993).
+        
+        2. **Z-Score**: Improved version using only historical data to avoid contamination. Identifies points that deviate from the mean by more than a threshold number of standard deviations. Based on Grubbs (1969).
+        
+        3. **Moving Average**: Uses a sliding window with robust statistics (median & MAD) to compute local baselines. Adapts to trends and seasonal patterns. Based on Rousseeuw & Croux (1993).
+        
+        4. **IQR (Interquartile Range)**: Tukey's classic method using windowed quartiles to identify outliers. The 1.5×IQR rule covers ~99.3% of normal distributions. Based on Tukey (1977).
+        
+        ### Why This Design?
+        
+        By **injecting known anomalies** and **comparing detections**, you can:
+        - Evaluate algorithm accuracy in real-time
+        - Tune parameters to optimize performance
+        - Compare different detection methods
+        - Understand the trade-off between sensitivity and false alarms
+        
+        This mirrors how machine learning engineers develop anomaly detection systems in production!
+        
+        ### Technologies Used
+        - **Streamlit**: Web framework for rapid prototyping
+        - **Plotly**: Interactive real-time visualizations
+        - **NumPy & SciPy**: Numerical computations and statistics
+        - **Pandas**: Data manipulation and analysis
+        """)
+    
+    st.markdown("---")
+    
     # Sidebar configuration
     st.sidebar.header("⚙️ Configuration")
     
@@ -1064,13 +1129,15 @@ def main():
         )
         chart_placeholder.plotly_chart(fig, use_container_width=True)
         
-        # Performance summary banner
-        if st.session_state.total_points >= 20:  # Show after enough data
+        # Performance summary banner (pre-allocated space to prevent layout shift)
+        # Always create the columns to maintain stable layout
+        col1, col2, col3, col4 = st.columns(4)
+        
+        if st.session_state.total_points >= 20:  # Show metrics after enough data
             metrics = calculate_performance_metrics(anomalies, st.session_state.actual_anomalies)
             total_injected = sum(st.session_state.actual_anomalies)
             
             if total_injected > 0:
-                col1, col2, col3, col4 = st.columns(4)
                 with col1:
                     st.metric("📊 Anomalies Injected", total_injected, 
                              help="Total anomalies we've injected for testing")
@@ -1087,6 +1154,25 @@ def main():
                 with col4:
                     st.metric("🎯 Detection Rate", f"{metrics['recall']:.0%}",
                              help="Recall: What % of anomalies did we catch?")
+            else:
+                with col1:
+                    st.metric("📊 Anomalies Injected", 0)
+                with col2:
+                    st.metric("✅ Correctly Detected", 0)
+                with col3:
+                    st.metric("⚠️ Missed", 0)
+                with col4:
+                    st.metric("🎯 Detection Rate", "0%")
+        else:
+            # Show placeholders while collecting data
+            with col1:
+                st.metric("📊 Data Points", st.session_state.total_points)
+            with col2:
+                st.info("Collecting data...")
+            with col3:
+                st.caption("Need 20+ points for metrics")
+            with col4:
+                st.caption(f"{20 - st.session_state.total_points} more needed")
         
         # Status message
         status_placeholder.info(f"📡 Streaming data... (Point #{st.session_state.total_points})")
@@ -1138,72 +1224,6 @@ def main():
             status_placeholder.warning("⏸️ Paused - Click 'Start' to resume streaming")
         else:
             status_placeholder.info("👆 Click 'Start' to begin streaming data")
-    
-    # Footer with information
-    st.markdown("---")
-    
-    # Performance Legend
-    with st.expander("📊 Understanding the Visualization & Performance Metrics", expanded=False):
-        st.markdown("""
-        ### Chart Legend
-        
-        The chart uses different markers to show detection performance in real-time:
-        
-        - **✅ Green Stars**: **True Positives (TP)** - Correct detections! The algorithm successfully identified an actual anomaly.
-        - **❌ Red X**: **False Positives (FP)** - Algorithm detected an anomaly where there wasn't one (false alarm).
-        - **⚠️ Yellow Diamonds**: **False Negatives (FN)** - Missed anomalies! The algorithm failed to detect an actual anomaly.
-        - **🔵 Blue Line**: Normal data stream with natural patterns and noise.
-        - **🟠 Orange Circles (transparent)**: Ground truth - actual injected anomalies for reference.
-        
-        ### Performance Metrics Explained
-        
-        **Confusion Matrix Elements**:
-        - **True Positives (TP)**: Correctly detected anomalies ✅
-        - **False Positives (FP)**: Incorrect detections (false alarms) ❌
-        - **False Negatives (FN)**: Missed anomalies ⚠️
-        - **True Negatives (TN)**: Correctly identified normal points
-        
-        **Key Metrics**:
-        - **Precision**: TP / (TP + FP) - How many detected anomalies were actually anomalies?
-        - **Recall (Sensitivity)**: TP / (TP + FN) - What percentage of actual anomalies did we catch?
-        - **F1-Score**: Harmonic mean of precision and recall - Overall detection quality.
-        - **Accuracy**: (TP + TN) / Total - Overall correctness of the algorithm.
-        
-        ### How It Works
-        
-        **Data Generation**: The app generates truly random time-series data using:
-        - **Random Walk Process**: Each value = previous value + random change (like real stock prices!)
-        - **Volatility**: Controls the magnitude of random fluctuations
-        - **Drift**: Optional upward or downward bias
-        - **True Randomness**: Completely unpredictable, no predetermined patterns
-        - **Injected Anomalies**: Random spikes at configurable probability for testing
-        
-        **Anomaly Detection Methods** (All Academically Validated):
-        
-        1. **MAD (Modified Z-Score)** 🏆 **Most Robust**: Uses median and Median Absolute Deviation instead of mean/std. Extremely robust to outliers and recommended for most use cases. Based on Iglewicz & Hoaglin (1993).
-        
-        2. **Z-Score**: Improved version using only historical data to avoid contamination. Identifies points that deviate from the mean by more than a threshold number of standard deviations. Based on Grubbs (1969).
-        
-        3. **Moving Average**: Uses a sliding window with robust statistics (median & MAD) to compute local baselines. Adapts to trends and seasonal patterns. Based on Rousseeuw & Croux (1993).
-        
-        4. **IQR (Interquartile Range)**: Tukey's classic method using windowed quartiles to identify outliers. The 1.5×IQR rule covers ~99.3% of normal distributions. Based on Tukey (1977).
-        
-        ### Why This Design?
-        
-        By **injecting known anomalies** and **comparing detections**, you can:
-        - Evaluate algorithm accuracy in real-time
-        - Tune parameters to optimize performance
-        - Compare different detection methods
-        - Understand the trade-off between sensitivity and false alarms
-        
-        This mirrors how machine learning engineers develop anomaly detection systems in production!
-        
-        ### Technologies Used
-        - **Streamlit**: Web framework for rapid prototyping
-        - **Plotly**: Interactive real-time visualizations
-        - **NumPy & SciPy**: Numerical computations and statistics
-        - **Pandas**: Data manipulation and analysis
-        """)
 
 
 if __name__ == "__main__":
