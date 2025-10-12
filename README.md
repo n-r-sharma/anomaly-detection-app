@@ -2,7 +2,13 @@
 
 A production-grade web application for detecting anomalies in streaming time-series data using multiple academically validated statistical methods. Built with Streamlit for rapid deployment.
 
-**Live Demo**: `[Coming Soon - Deployment in progress]`
+## 🌐 Live Demo
+
+**👉 [Launch Live App](https://anomaly-detection-app-01.streamlit.app/)** ← Try it now!
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://anomaly-detection-app-01.streamlit.app/)
+[![Open in Streamlit](https://img.shields.io/badge/Open%20in-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://anomaly-detection-app-01.streamlit.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/n-r-sharma/anomaly-detection-app)
 
 ---
 
@@ -365,21 +371,26 @@ Let the app run for 5-10 minutes:
 
 ## 🌐 Deployment
 
-### Option 1: Streamlit Community Cloud (Recommended - FREE)
+### ✅ Already Deployed!
+
+This app is **live** at: **[https://anomaly-detection-app-01.streamlit.app/](https://anomaly-detection-app-01.streamlit.app/)**
+
+Deployed on **Streamlit Community Cloud** (FREE tier) with automatic updates from the `main` branch.
+
+---
+
+### Want to Deploy Your Own Copy?
+
+#### Option 1: Streamlit Community Cloud (Recommended - FREE)
 
 ```bash
-# 1. Push to GitHub
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin <your-github-repo-url>
-git push -u origin main
+# 1. Fork this repository on GitHub
 
 # 2. Deploy
 # - Visit: https://share.streamlit.io
 # - Sign in with GitHub
 # - Click "New app"
-# - Select repository → branch → app.py
+# - Select your forked repository → main → app.py
 # - Click "Deploy"
 # ✅ Live in minutes at: https://[your-app-name].streamlit.app
 ```
@@ -531,4 +542,4 @@ Built for the real-time anomaly detection challenge - demonstrating production-g
 
 ---
 
-**Status**: ✅ All brief requirements met | Ready for deployment
+**Status**: ✅ All brief requirements met | 🚀 **DEPLOYED & LIVE** at [anomaly-detection-app-01.streamlit.app](https://anomaly-detection-app-01.streamlit.app/)
